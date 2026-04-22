@@ -53,29 +53,37 @@ export function parseRules(
 
   for (const token of tokens) {
     switch (token.directive) {
-      case Directive.IF:
+      case Directive.IfChange:
         if (currentRule) {
-          throw new Error(`unexpected IF directive at ${file}:${token.line}`);
+          throw new Error(
+            `unexpected IfChange directive at ${file}:${token.line}`,
+          );
         }
 
         currentRule = {
-          targets: parseTargets(token.args),
+          targets: [],
           hunk: {
             file,
             range: { start: token.line, end: -1 },
           },
           present: false,
         };
-        break;
 
-      case Directive.END:
-        if (!currentRule) {
-          throw new Error(`unexpected END directive at ${file}:${token.line}`);
-        }
-
+        // IfChange may carry an optional label: LINT.IfChange(my_label)
         if (token.args.length > 0) {
           currentRule.id = token.args[0];
         }
+        break;
+
+      case Directive.ThenChange:
+        if (!currentRule) {
+          throw new Error(
+            `unexpected ThenChange directive at ${file}:${token.line}`,
+          );
+        }
+
+        // ThenChange carries the targets: LINT.ThenChange(path/to/file, :label)
+        currentRule.targets = parseTargets(token.args);
 
         if (currentRule.hunk) {
           currentRule.hunk.range.end = token.line;

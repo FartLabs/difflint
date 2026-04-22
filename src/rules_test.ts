@@ -82,10 +82,10 @@ Deno.test("parseTargets handles empty args list", () => {
 
 // --- parseRules ---
 
-Deno.test("parseRules parses a simple IF/END pair", () => {
+Deno.test("parseRules parses a simple IfChange/ThenChange pair", () => {
   const tokens: Token[] = [
-    { directive: Directive.IF, args: ["target.ts"], line: 2 },
-    { directive: Directive.END, args: [], line: 5 },
+    { directive: Directive.IfChange, args: [], line: 2 },
+    { directive: Directive.ThenChange, args: ["target.ts"], line: 5 },
   ];
   const rules = parseRules("main.ts", tokens, []);
   assertEquals(rules.length, 1);
@@ -95,10 +95,19 @@ Deno.test("parseRules parses a simple IF/END pair", () => {
   assertEquals(rules[0].present, false);
 });
 
+Deno.test("parseRules captures label from IfChange", () => {
+  const tokens: Token[] = [
+    { directive: Directive.IfChange, args: ["MyRuleID"], line: 2 },
+    { directive: Directive.ThenChange, args: ["target.ts"], line: 5 },
+  ];
+  const rules = parseRules("main.ts", tokens, []);
+  assertEquals(rules[0].id, "MyRuleID");
+});
+
 Deno.test("parseRules sets present to true when range overlaps diff", () => {
   const tokens: Token[] = [
-    { directive: Directive.IF, args: ["target.ts"], line: 2 },
-    { directive: Directive.END, args: [], line: 5 },
+    { directive: Directive.IfChange, args: [], line: 2 },
+    { directive: Directive.ThenChange, args: ["target.ts"], line: 5 },
   ];
   const ranges = [{ start: 3, end: 4 }];
   const rules = parseRules("main.ts", tokens, ranges);
@@ -107,29 +116,20 @@ Deno.test("parseRules sets present to true when range overlaps diff", () => {
 
 Deno.test("parseRules sets present to false when range does not overlap", () => {
   const tokens: Token[] = [
-    { directive: Directive.IF, args: ["target.ts"], line: 2 },
-    { directive: Directive.END, args: [], line: 5 },
+    { directive: Directive.IfChange, args: [], line: 2 },
+    { directive: Directive.ThenChange, args: ["target.ts"], line: 5 },
   ];
   const ranges = [{ start: 10, end: 20 }];
   const rules = parseRules("main.ts", tokens, ranges);
   assertEquals(rules[0].present, false);
 });
 
-Deno.test("parseRules captures rule ID from END directive", () => {
-  const tokens: Token[] = [
-    { directive: Directive.IF, args: ["target.ts"], line: 2 },
-    { directive: Directive.END, args: ["MyRuleID"], line: 5 },
-  ];
-  const rules = parseRules("main.ts", tokens, []);
-  assertEquals(rules[0].id, "MyRuleID");
-});
-
 Deno.test("parseRules parses multiple rule pairs", () => {
   const tokens: Token[] = [
-    { directive: Directive.IF, args: ["a.ts"], line: 1 },
-    { directive: Directive.END, args: [], line: 3 },
-    { directive: Directive.IF, args: ["b.ts"], line: 5 },
-    { directive: Directive.END, args: [], line: 7 },
+    { directive: Directive.IfChange, args: [], line: 1 },
+    { directive: Directive.ThenChange, args: ["a.ts"], line: 3 },
+    { directive: Directive.IfChange, args: [], line: 5 },
+    { directive: Directive.ThenChange, args: ["b.ts"], line: 7 },
   ];
   const rules = parseRules("main.ts", tokens, []);
   assertEquals(rules.length, 2);
@@ -137,26 +137,26 @@ Deno.test("parseRules parses multiple rule pairs", () => {
   assertEquals(rules[1].targets, [{ file: "b.ts" }]);
 });
 
-Deno.test("parseRules throws on nested IF directives", () => {
+Deno.test("parseRules throws on nested IfChange directives", () => {
   const tokens: Token[] = [
-    { directive: Directive.IF, args: ["a.ts"], line: 1 },
-    { directive: Directive.IF, args: ["b.ts"], line: 3 },
+    { directive: Directive.IfChange, args: [], line: 1 },
+    { directive: Directive.IfChange, args: [], line: 3 },
   ];
   assertThrows(
     () => parseRules("main.ts", tokens, []),
     Error,
-    "unexpected IF directive at main.ts:3",
+    "unexpected IfChange directive at main.ts:3",
   );
 });
 
-Deno.test("parseRules throws on END without IF", () => {
+Deno.test("parseRules throws on ThenChange without IfChange", () => {
   const tokens: Token[] = [
-    { directive: Directive.END, args: [], line: 5 },
+    { directive: Directive.ThenChange, args: [], line: 5 },
   ];
   assertThrows(
     () => parseRules("main.ts", tokens, []),
     Error,
-    "unexpected END directive at main.ts:5",
+    "unexpected ThenChange directive at main.ts:5",
   );
 });
 

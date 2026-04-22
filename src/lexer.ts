@@ -2,8 +2,8 @@
  * Directive represents the type of directive.
  */
 export enum Directive {
-  IF = "IF",
-  END = "END",
+  IfChange = "IfChange",
+  ThenChange = "ThenChange",
 }
 
 /**
@@ -69,15 +69,28 @@ function parseToken(
         -suffix.length || undefined,
       )
         .trim();
-      const args = middle.split(/\s+/);
-      const directiveString = args[0];
+
+      // Match directive name and optional parenthesized arguments:
+      //   IfChange
+      //   IfChange(label)
+      //   ThenChange(target1, target2)
+      const match = middle.match(/^(\w+)(?:\(([^)]*)\))?$/);
+      if (!match) continue;
+
+      const directiveString = match[1];
+      const parenContent = match[2];
 
       if (
-        directiveString === Directive.IF || directiveString === Directive.END
+        directiveString === Directive.IfChange ||
+        directiveString === Directive.ThenChange
       ) {
+        const args: string[] = parenContent
+          ? parenContent.split(/[,\s]+/).map((s) => s.trim()).filter(Boolean)
+          : [];
+
         return {
           directive: directiveString as Directive,
-          args: args.slice(1),
+          args,
           line: lineNumber,
         };
       }

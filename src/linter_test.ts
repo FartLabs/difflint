@@ -12,18 +12,18 @@ Deno.test("lint integration test", async () => {
     const file1 = "main.ts";
     // This rule says: if target.ts (ID range) changes, this range must also change.
     const content1 = `
-//LINT.IF target.ts:ID
+//LINT.IfChange
 some code
-//LINT.END ID
+//LINT.ThenChange(target.ts:ID)
 `;
     await Deno.writeTextFile(file1, content1);
 
     const file2 = "target.ts";
-    // This defines the ID range level
+    // This defines the ID range
     const content2 = `
-//LINT.IF
+//LINT.IfChange(ID)
 some other code
-//LINT.END ID
+//LINT.ThenChange()
 `;
     await Deno.writeTextFile(file2, content2);
 
@@ -32,10 +32,10 @@ some other code
 --- a/target.ts
 +++ b/target.ts
 @@ -1,4 +1,5 @@
- //LINT.IF
+ //LINT.IfChange(ID)
 +// changed line
  some other code
- //LINT.END ID
+ //LINT.ThenChange()
 `;
     const stream = new ReadableStream({
       start(controller) {
