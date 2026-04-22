@@ -22,6 +22,18 @@ Chromium, Fuchsia, and TensorFlow.
 This project is a reimagining of a previous Go implementation
 [@EthanThatOneKid/difflint](https://github.com/EthanThatOneKid/difflint).
 
+## Methodology
+
+This TypeScript implementation of `difflint` was built using an AI-native "clean-room" approach, inspired by the methodology showcased in the [claw-code](https://x.com/realsigridjin/status/2039472968624185713) project.
+
+Rather than a manual line-by-line translation, the porting process prioritized **architectural clarity** and **system design**:
+
+- **Architectural Decomposition**: The original Go logic was broken down into its fundamental modules: a unified diff parser, a directive lexer, and a rule enforcement engine.
+- **AI-Driven Reimplementation**: The codebase was rebuilt from the ground up using agentic coordination (Architect, Executor, and Reviewer loops). This approach allowed for a rapid, high-fidelity port that targets modern TypeScript and the Deno runtime.
+- **Behavioral Parity**: Stability was maintained through a rigorous "test-first" methodology. Every core component is backed by unit tests that verify the logic remains identical to the original implementation.
+
+By migrating the core logic to TypeScript and publishing to [JSR](https://jsr.io/@fartlabs/difflint), this project enables both developers and machines to access `difflint` natively within JavaScript runtimes, facilitating seamless integration into web-based CI/CD pipelines and modern AI-driven devtooling.
+
 ## Installation
 
 You can run `difflint` directly using Deno without a local installation:
