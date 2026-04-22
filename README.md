@@ -1,8 +1,5 @@
 # difflint
 
-[![JSR](https://jsr.io/badges/@ethan/difflint)](https://jsr.io/@ethan/difflint)
-[![Deno](https://img.shields.io/badge/deno-^1.40-blue)](https://deno.land/)
-
 🔍 Git-based linter tool that scans code changes for compliance with defined
 rules in source code.
 

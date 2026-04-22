@@ -2,16 +2,37 @@ import { walk } from "@std/fs/walk";
 import { globToRegExp } from "@std/path/glob-to-regexp";
 import * as path from "@std/path";
 import { parseHunks } from "./diff.ts";
+import type { Hunk, Range } from "./diff.ts";
 import { lex } from "./lexer.ts";
 import { parseRules, targetKey } from "./rules.ts";
+import type { Rule } from "./rules.ts";
 import { ExtensionMap } from "./extension_map.ts";
-import type {
-  Hunk,
-  LintOptions,
-  Range,
-  Rule,
-  UnsatisfiedRule,
-} from "./types.ts";
+
+/**
+ * LintOptions represents the options for a linting operation.
+ */
+export interface LintOptions {
+  /** include is a list of file patterns to include in the linting. */
+  include?: string[];
+  /** exclude is a list of file patterns to exclude from the linting. */
+  exclude?: string[];
+  /** templates is the list of directive templates. */
+  templates?: string[];
+  /** fileExtensionMap is a map of file extensions to directive templates. */
+  fileExtensionMap?: Record<string, number[]>;
+  /** defaultTemplate is the default directive template index. */
+  defaultTemplate?: number;
+}
+
+/**
+ * UnsatisfiedRule represents a rule that is not satisfied.
+ */
+export interface UnsatisfiedRule {
+  /** Rule that is not satisfied. */
+  rule: Rule;
+  /** Set of target indices that are not satisfied. */
+  unsatisfiedTargets: Set<number>;
+}
 
 /**
  * LintResult represents the result of a linting operation.

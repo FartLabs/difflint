@@ -1,7 +1,7 @@
 import { parseArgs } from "@std/cli/parse-args";
 import { lint } from "./linter.ts";
+import type { UnsatisfiedRule } from "./linter.ts";
 import { targetKey } from "./rules.ts";
-import type { UnsatisfiedRule } from "./types.ts";
 import { ExtensionMap } from "./extension_map.ts";
 
 /**

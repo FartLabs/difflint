@@ -1,5 +1,24 @@
 import { TextLineStream } from "@std/streams/text-line-stream";
-import type { Hunk } from "./types.ts";
+
+/**
+ * Range represents a range of line numbers.
+ */
+export interface Range {
+  /** Start line number. */
+  start: number;
+  /** End line number. */
+  end: number;
+}
+
+/**
+ * Hunk represents a diff hunk that must be present in the diff.
+ */
+export interface Hunk {
+  /** File specifier of the defined range. */
+  file: string;
+  /** Range of code in which a diff hunk intersects. */
+  range: Range;
+}
 
 /**
  * parseHunks parses a unified diff and returns the extracted file paths

@@ -5,7 +5,6 @@
  * @module
  */
 
-export * from "./types.ts";
 export * from "./diff.ts";
 export * from "./lexer.ts";
 export * from "./rules.ts";
