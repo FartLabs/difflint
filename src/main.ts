@@ -1,8 +1,8 @@
 import { parseArgs } from "@std/cli/parse-args";
-import { lint } from "./linter/engine.ts";
-import { targetKey } from "./linter/rules.ts";
-import type { UnsatisfiedRule } from "./core/types.ts";
-import { ExtensionMap } from "./config/mod.ts";
+import { lint } from "./linter.ts";
+import { targetKey } from "./rules.ts";
+import type { UnsatisfiedRule } from "./types.ts";
+import { ExtensionMap } from "./extension_map.ts";
 
 /**
  * Main entry point for the difflint CLI.

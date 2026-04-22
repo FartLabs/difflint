@@ -1,17 +1,17 @@
 import { walk } from "@std/fs/walk";
 import { globToRegExp } from "@std/path/glob-to-regexp";
 import * as path from "@std/path";
-import { parseHunks } from "../diff/mod.ts";
+import { parseHunks } from "./diff.ts";
 import { lex } from "./lexer.ts";
 import { parseRules, targetKey } from "./rules.ts";
-import { ExtensionMap } from "../config/mod.ts";
+import { ExtensionMap } from "./extension_map.ts";
 import type {
   Hunk,
   LintOptions,
   Range,
   Rule,
   UnsatisfiedRule,
-} from "../core/types.ts";
+} from "./types.ts";
 
 /**
  * LintResult represents the result of a linting operation.

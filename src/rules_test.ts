@@ -1,27 +1,47 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { Directive, type Token } from "./lexer.ts";
-import { parseRules, parseTargets, rangesIntersect, targetKey } from "./rules.ts";
+import {
+  parseRules,
+  parseTargets,
+  rangesIntersect,
+  targetKey,
+} from "./rules.ts";
 
 // --- rangesIntersect ---
 
 Deno.test("rangesIntersect returns true for overlapping ranges", () => {
-  assertEquals(rangesIntersect({ start: 1, end: 5 }, { start: 3, end: 7 }), true);
+  assertEquals(
+    rangesIntersect({ start: 1, end: 5 }, { start: 3, end: 7 }),
+    true,
+  );
 });
 
 Deno.test("rangesIntersect returns true for identical ranges", () => {
-  assertEquals(rangesIntersect({ start: 1, end: 5 }, { start: 1, end: 5 }), true);
+  assertEquals(
+    rangesIntersect({ start: 1, end: 5 }, { start: 1, end: 5 }),
+    true,
+  );
 });
 
 Deno.test("rangesIntersect returns true for contained ranges", () => {
-  assertEquals(rangesIntersect({ start: 1, end: 10 }, { start: 3, end: 5 }), true);
+  assertEquals(
+    rangesIntersect({ start: 1, end: 10 }, { start: 3, end: 5 }),
+    true,
+  );
 });
 
 Deno.test("rangesIntersect returns true for touching ranges", () => {
-  assertEquals(rangesIntersect({ start: 1, end: 3 }, { start: 3, end: 5 }), true);
+  assertEquals(
+    rangesIntersect({ start: 1, end: 3 }, { start: 3, end: 5 }),
+    true,
+  );
 });
 
 Deno.test("rangesIntersect returns false for disjoint ranges", () => {
-  assertEquals(rangesIntersect({ start: 1, end: 3 }, { start: 4, end: 6 }), false);
+  assertEquals(
+    rangesIntersect({ start: 1, end: 3 }, { start: 4, end: 6 }),
+    false,
+  );
 });
 
 Deno.test("rangesIntersect is commutative", () => {

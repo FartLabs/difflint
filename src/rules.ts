@@ -1,5 +1,5 @@
 import { Directive, type Token } from "./lexer.ts";
-import type { Range, Rule, Target } from "../core/types.ts";
+import type { Range, Rule, Target } from "./types.ts";
 import * as path from "@std/path";
 
 /**

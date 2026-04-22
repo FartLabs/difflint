@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { parseHunks } from "./mod.ts";
+import { parseHunks } from "./diff.ts";
 
 Deno.test("parseHunks extracts correct information from unified diff", async () => {
   const diffString = `

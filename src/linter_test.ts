@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lint } from "./engine.ts";
+import { lint } from "./linter.ts";
 import * as path from "@std/path";
 
 Deno.test("lint integration test", async () => {
@@ -28,7 +28,7 @@ some other code
     await Deno.writeTextFile(file2, content2);
 
     // Mock diff (changing target.ts:ID but not main.ts)
-    const diffStr = `
+    const diffString = `
 --- a/target.ts
 +++ b/target.ts
 @@ -1,4 +1,5 @@
@@ -39,7 +39,7 @@ some other code
 `;
     const stream = new ReadableStream({
       start(controller) {
-        controller.enqueue(new TextEncoder().encode(diffStr));
+        controller.enqueue(new TextEncoder().encode(diffString));
         controller.close();
       },
     });

@@ -1,5 +1,5 @@
 import { TextLineStream } from "@std/streams/text-line-stream";
-import type { Hunk } from "../core/types.ts";
+import type { Hunk } from "./types.ts";
 
 /**
  * parseHunks parses a unified diff and returns the extracted file paths
