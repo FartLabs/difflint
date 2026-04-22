@@ -64,8 +64,8 @@ export interface LintOptions {
   exclude?: string[];
   /** templates is the list of directive templates. */
   templates?: string[];
-  /** fileExtMap is a map of file extensions to directive templates. */
-  fileExtMap?: Record<string, number[]>;
+  /** fileExtensionMap is a map of file extensions to directive templates. */
+  fileExtensionMap?: Record<string, number[]>;
   /** defaultTemplate is the default directive template index. */
   defaultTemplate?: number;
 }

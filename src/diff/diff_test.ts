@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { parseHunks } from "./mod.ts";
 
 Deno.test("parseHunks extracts correct information from unified diff", async () => {
-  const diffStr = `
+  const diffString = `
 diff --git a/main.ts b/main.ts
 index 1234567..890abcd 100644
 --- a/main.ts
@@ -25,7 +25,7 @@ index abcdef..123456 100644
 
   const stream = new ReadableStream({
     start(controller) {
-      controller.enqueue(new TextEncoder().encode(diffStr));
+      controller.enqueue(new TextEncoder().encode(diffString));
       controller.close();
     },
   });
@@ -40,7 +40,7 @@ index abcdef..123456 100644
 });
 
 Deno.test("parseHunks handles omitted counts", async () => {
-  const diffStr = `
+  const diffString = `
 --- a/test.ts
 +++ b/test.ts
 @@ -1 +1 @@
@@ -50,7 +50,7 @@ Deno.test("parseHunks handles omitted counts", async () => {
 
   const stream = new ReadableStream({
     start(controller) {
-      controller.enqueue(new TextEncoder().encode(diffStr));
+      controller.enqueue(new TextEncoder().encode(diffString));
       controller.close();
     },
   });

@@ -1,4 +1,4 @@
-import { Directive, type Token } from "./lex.ts";
+import { Directive, type Token } from "./lexer.ts";
 import type { Range, Rule, Target } from "../core/types.ts";
 import * as path from "@std/path";
 
@@ -56,8 +56,8 @@ export function parseRules(
           const ruleRange = currentRule.hunk.range;
 
           // A rule is present if it overlaps with any diff hunk
-          currentRule.present = ranges.some((r) =>
-            rangesIntersect(ruleRange, r)
+          currentRule.present = ranges.some((range) =>
+            rangesIntersect(ruleRange, range)
           );
         }
 
@@ -106,6 +106,6 @@ export function targetKey(pathname: string, target: Target): string {
 /**
  * isRelativeToCurrentDirectory returns true if the path starts with ./ or ../
  */
-function isRelativeToCurrentDirectory(p: string): boolean {
-  return p.startsWith("./") || p.startsWith("../");
+function isRelativeToCurrentDirectory(path: string): boolean {
+  return path.startsWith("./") || path.startsWith("../");
 }

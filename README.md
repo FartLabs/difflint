@@ -3,9 +3,12 @@
 [![JSR](https://jsr.io/badges/@ethan/difflint)](https://jsr.io/@ethan/difflint)
 [![Deno](https://img.shields.io/badge/deno-^1.40-blue)](https://deno.land/)
 
-🔍 Git-based linter tool that scans code changes for compliance with defined rules in source code.
+🔍 Git-based linter tool that scans code changes for compliance with defined
+rules in source code.
 
-`difflint` ensures that when certain parts of your codebase change, other related parts are also updated. It works by parsing "linting directives" in your comments and checking them against the current `git diff`.
+`difflint` ensures that when certain parts of your codebase change, other
+related parts are also updated. It works by parsing "linting directives" in your
+comments and checking them against the current `git diff`.
 
 ## Installation
 
@@ -33,16 +36,19 @@ difflint --help
 `difflint` looks for `IF` and `END` blocks in your comments. The syntax is:
 `[PREFIX]LINT.IF [TARGETS][SUFFIX]` ... `[PREFIX]LINT.END [ID][SUFFIX]`
 
-- **`TARGETS`**: A space-separated list of targets that *must* be present in the diff if this block is modified.
+- **`TARGETS`**: A space-separated list of targets that _must_ be present in the
+  diff if this block is modified.
   - `path/to/file`: Requires the entire file to be in the diff.
-  - `path/to/file:ID`: Requires a specific range with the given `ID` to be in the diff.
-  - `:ID`: Requires a range in the *current* file to be in the diff.
+  - `path/to/file:ID`: Requires a specific range with the given `ID` to be in
+    the diff.
+  - `:ID`: Requires a range in the _current_ file to be in the diff.
 
 ### Examples
 
 #### Single file dependency
 
-Ensure that if the "Edit me first" logic changes, the "Edit me second" logic is also reviewed/updated.
+Ensure that if the "Edit me first" logic changes, the "Edit me second" logic is
+also reviewed/updated.
 
 ```py
 # File: ./main.py
@@ -90,8 +96,10 @@ enum Thing {
 
 //LINT.IF :thing_enum
 switch (thing) {
-  case Thing.ONE: return doThingOne();
-  case Thing.TWO: return doThingTwo();
+  case Thing.ONE:
+    return doThingOne();
+  case Thing.TWO:
+    return doThingTwo();
 }
 //LINT.END
 ```
@@ -100,7 +108,8 @@ switch (thing) {
 
 - `--include <glob>`: Include files matching the given glob.
 - `--exclude <glob>`: Exclude files matching the given glob.
-- `--ext_map <path>`: Path to a JSON file mapping extensions to custom templates.
+- `--ext_map <path>`: Path to a JSON file mapping extensions to custom
+  templates.
 - `--verbose, -v`: Enable verbose logging.
 
 ### Custom File Extensions
@@ -114,6 +123,7 @@ Create a `difflint.json` to support custom comment styles:
 ```
 
 Then run with:
+
 ```bash
 git diff | difflint --ext_map="difflint.json"
 ```

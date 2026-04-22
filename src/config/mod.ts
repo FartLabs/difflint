@@ -10,9 +10,9 @@ export const DefaultTemplates: string[] = [
 ];
 
 /**
- * DefaultFileExtMap is the default map of file extensions to directive template indices.
+ * DefaultFileExtensionMap is the default map of file extensions to directive template indices.
  */
-export const DefaultFileExtMap: Record<string, number[]> = {
+export const DefaultFileExtensionMap: Record<string, number[]> = {
   "py": [0],
   "sh": [0],
   "go": [1],
@@ -39,23 +39,23 @@ export const DefaultFileExtMap: Record<string, number[]> = {
 };
 
 /**
- * ExtMap represents the extensions and templates for a linting operation.
+ * ExtensionMap represents the extensions and templates for a linting operation.
  */
-export class ExtMap {
+export class ExtensionMap {
   public templates: string[];
-  public fileExtMap: Record<string, number[]>;
+  public fileExtensionMap: Record<string, number[]>;
 
   constructor(
     customMap?: Record<string, string[]>,
     templates = DefaultTemplates,
-    fileExtMap = DefaultFileExtMap,
+    fileExtensionMap = DefaultFileExtensionMap,
   ) {
     this.templates = [...templates];
-    this.fileExtMap = { ...fileExtMap };
+    this.fileExtensionMap = { ...fileExtensionMap };
 
     if (customMap) {
-      for (const [ext, tpls] of Object.entries(customMap)) {
-        tpls.forEach((tpl) => this.add(ext, tpl));
+      for (const [extension, templates] of Object.entries(customMap)) {
+        templates.forEach((template) => this.add(extension, template));
       }
     }
   }
@@ -63,20 +63,20 @@ export class ExtMap {
   /**
    * add adds a directive template for a file extension.
    */
-  private add(ext: string, tpl: string) {
-    let tplIndex = this.templates.indexOf(tpl);
+  private add(extension: string, template: string) {
+    let templateIndex = this.templates.indexOf(template);
 
-    if (tplIndex === -1) {
-      tplIndex = this.templates.length;
-      this.templates.push(tpl);
+    if (templateIndex === -1) {
+      templateIndex = this.templates.length;
+      this.templates.push(template);
     }
 
-    if (!this.fileExtMap[ext]) {
-      this.fileExtMap[ext] = [];
+    if (!this.fileExtensionMap[extension]) {
+      this.fileExtensionMap[extension] = [];
     }
 
-    if (!this.fileExtMap[ext].includes(tplIndex)) {
-      this.fileExtMap[ext].push(tplIndex);
+    if (!this.fileExtensionMap[extension].includes(templateIndex)) {
+      this.fileExtensionMap[extension].push(templateIndex);
     }
   }
 
@@ -84,10 +84,10 @@ export class ExtMap {
    * getTemplatesForFile returns the directive templates for the given file path.
    */
   public getTemplatesForFile(filePath: string): string[] {
-    const ext = filePath.split(".").pop() || "";
+    const extension = filePath.split(".").pop() || "";
     // If we have a mapping for this extension, use it.
     // BUT only if the indices are within bounds of our current templates.
-    const indices = this.fileExtMap[ext];
+    const indices = this.fileExtensionMap[extension];
     if (indices) {
       const result = indices
         .map((i) => this.templates[i])

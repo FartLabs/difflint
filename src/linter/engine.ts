@@ -2,9 +2,9 @@ import { walk } from "@std/fs/walk";
 import { globToRegExp } from "@std/path/glob-to-regexp";
 import * as path from "@std/path";
 import { parseHunks } from "../diff/mod.ts";
-import { lex } from "./lex.ts";
+import { lex } from "./lexer.ts";
 import { parseRules, targetKey } from "./rules.ts";
-import { ExtMap } from "../config/mod.ts";
+import { ExtensionMap } from "../config/mod.ts";
 import type {
   Hunk,
   LintOptions,
@@ -43,8 +43,8 @@ export async function lint(
   const unsatisfiedRules = check(rulesMap, presentTargetsMap);
 
   // Filter out rules that are not included in the inclusion/exclusion filters.
-  const filteredRules = unsatisfiedRules.filter((r) =>
-    isIncluded(r.rule.hunk.file, include, exclude)
+  const filteredRules = unsatisfiedRules.filter((rule) =>
+    isIncluded(rule.rule.hunk.file, include, exclude)
   );
 
   return { unsatisfiedRules: filteredRules };
@@ -68,7 +68,11 @@ async function rulesMapFromHunks(
     rangesMap.set(hunk.file, ranges);
   }
 
-  const extMap = new ExtMap(undefined, options.templates, options.fileExtMap);
+  const extensionMap = new ExtensionMap(
+    undefined,
+    options.templates,
+    options.fileExtensionMap,
+  );
   const rulesMap = new Map<string, Rule[]>();
 
   for await (
@@ -79,7 +83,7 @@ async function rulesMapFromHunks(
   ) {
     const filePath = path.normalize(entry.path);
 
-    const templates = extMap.getTemplatesForFile(filePath);
+    const templates = extensionMap.getTemplatesForFile(filePath);
     if (templates.length === 0) continue;
 
     const content = await Deno.readTextFile(filePath);
@@ -152,14 +156,14 @@ export function isIncluded(
   const normalized = path.normalize(pathname).replace(/\\/g, "/");
 
   for (const pattern of exclude) {
-    const rx = globToRegExp(pattern);
-    if (rx.test(normalized)) return false;
+    const regexp = globToRegExp(pattern);
+    if (regexp.test(normalized)) return false;
   }
 
   if (include.length > 0) {
     for (const pattern of include) {
-      const rx = globToRegExp(pattern);
-      if (rx.test(normalized)) return true;
+      const regexp = globToRegExp(pattern);
+      if (regexp.test(normalized)) return true;
     }
     return false;
   }

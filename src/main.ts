@@ -2,7 +2,7 @@ import { parseArgs } from "@std/cli/parse-args";
 import { lint } from "./linter/engine.ts";
 import { targetKey } from "./linter/rules.ts";
 import type { UnsatisfiedRule } from "./core/types.ts";
-import { ExtMap } from "./config/mod.ts";
+import { ExtensionMap } from "./config/mod.ts";
 
 /**
  * Main entry point for the difflint CLI.
@@ -16,7 +16,7 @@ if (import.meta.main) {
  */
 async function main() {
   const args = parseArgs(Deno.args, {
-    string: ["include", "exclude", "ext_map"],
+    string: ["include", "exclude", "extension_map"],
     boolean: ["verbose", "help"],
     alias: { h: "help", v: "verbose" },
     collect: ["include", "exclude"],
@@ -29,16 +29,18 @@ async function main() {
 
   const include = args.include as string[] || [];
   const exclude = args.exclude as string[] || [];
-  const extMapPath = args.ext_map as string;
+  const extensionMapPath = args.extension_map as string;
   const verbose = args.verbose as boolean;
 
-  let customExtMap: Record<string, string[]> | undefined;
-  if (extMapPath) {
+  let customExtensionMap: Record<string, string[]> | undefined;
+  if (extensionMapPath) {
     try {
-      const content = await Deno.readTextFile(extMapPath);
-      customExtMap = JSON.parse(content);
-    } catch (err) {
-      console.error(`Error reading ext_map file: ${(err as Error).message}`);
+      const content = await Deno.readTextFile(extensionMapPath);
+      customExtensionMap = JSON.parse(content);
+    } catch (error) {
+      console.error(
+        `Error reading extension_map file: ${(error as Error).message}`,
+      );
       Deno.exit(1);
     }
   }
@@ -53,8 +55,8 @@ async function main() {
     const result = await lint(Deno.stdin.readable, {
       include,
       exclude,
-      fileExtMap: customExtMap
-        ? new ExtMap(customExtMap).fileExtMap
+      fileExtensionMap: customExtensionMap
+        ? new ExtensionMap(customExtensionMap).fileExtensionMap
         : undefined,
     });
 
@@ -62,8 +64,8 @@ async function main() {
       console.error(formatUnsatisfiedRules(result.unsatisfiedRules));
       Deno.exit(1);
     }
-  } catch (err) {
-    console.error(`Error: ${(err as Error).message}`);
+  } catch (error) {
+    console.error(`Error: ${(error as Error).message}`);
     Deno.exit(1);
   }
 }
@@ -97,10 +99,10 @@ USAGE:
   git diff | difflint [OPTIONS]
 
 OPTIONS:
-  --include <glob>    Include files matching the given glob (can be used multiple times)
-  --exclude <glob>    Exclude files matching the given glob (can be used multiple times)
-  --ext_map <path>    Path to file extension map JSON
-  --verbose, -v       Enable verbose logging
-  --help, -h          Show this help message
+  --include <glob>         Include files matching the given glob (can be used multiple times)
+  --exclude <glob>         Exclude files matching the given glob (can be used multiple times)
+  --extension_map <path>   Path to file extension map JSON
+  --verbose, -v            Enable verbose logging
+  --help, -h               Show this help message
   `);
 }

@@ -70,13 +70,13 @@ function parseToken(
       )
         .trim();
       const args = middle.split(/\s+/);
-      const directiveStr = args[0];
+      const directiveString = args[0];
 
       if (
-        directiveStr === Directive.IF || directiveStr === Directive.END
+        directiveString === Directive.IF || directiveString === Directive.END
       ) {
         return {
-          directive: directiveStr as Directive,
+          directive: directiveString as Directive,
           args: args.slice(1),
           line: lineNumber,
         };

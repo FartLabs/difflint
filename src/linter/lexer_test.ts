@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { Directive, lex } from "./lex.ts";
+import { Directive, lex } from "./lexer.ts";
 
 Deno.test("lex extracts tokens correctly", () => {
   const content = `
