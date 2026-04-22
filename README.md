@@ -12,13 +12,13 @@ comments and checking them against the current `git diff`.
 You can run `difflint` directly using Deno without a local installation:
 
 ```bash
-git diff | deno run -A jsr:@ethan/difflint/cli
+git diff | deno -A jsr:@fartlabs/difflint/cli
 ```
 
 Or install it as a local executable:
 
 ```bash
-deno install -A -n difflint jsr:@ethan/difflint/cli
+deno install -A -n difflint jsr:@fartlabs/difflint/cli
 git diff | difflint
 ```
 
@@ -28,7 +28,7 @@ git diff | difflint
 difflint --help
 ```
 
-### Directive Syntax
+### Directive syntax
 
 `difflint` looks for `IF` and `END` blocks in your comments. The syntax is:
 `[PREFIX]LINT.IF [TARGETS][SUFFIX]` ... `[PREFIX]LINT.END [ID][SUFFIX]`
@@ -109,7 +109,7 @@ switch (thing) {
   templates.
 - `--verbose, -v`: Enable verbose logging.
 
-### Custom File Extensions
+### Custom file extensions
 
 Create a `difflint.json` to support custom comment styles:
 
@@ -125,12 +125,12 @@ Then run with:
 git diff | difflint --ext_map="difflint.json"
 ```
 
-## Library Usage
+## Library usage
 
 `difflint` can also be used as a library in your Deno projects:
 
 ```typescript
-import { lint } from "jsr:@ethan/difflint";
+import { lint } from "jsr:@fartlabs/difflint";
 
 const result = await lint(Deno.stdin.readable, {
   include: ["src/**/*.ts"],
